@@ -1,0 +1,58 @@
+     package com.croftsoft.core.util.filemap;
+
+     import java.io.*;
+     import java.util.*;
+
+     /*********************************************************************
+     * This Set is required for the AbstractMap implementation of
+     * FileMap.
+     *
+     * @see
+     *   FileMap
+     * @see
+     *   java.util.AbstractSet
+     *
+     * @version
+     *   1999-04-03
+     * @author
+     *   <A HREF="http://www.alumni.caltech.edu/~croft/">David W. Croft</A>
+     *********************************************************************/
+
+     public class  FileMapEntrySet extends AbstractSet
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+     {
+
+     private File  rootDirectory;
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     public  FileMapEntrySet ( File  rootDirectory )
+     //////////////////////////////////////////////////////////////////////
+     {
+       this.rootDirectory = rootDirectory;
+     }
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     public Iterator  iterator ( )
+     //////////////////////////////////////////////////////////////////////
+     {
+       return new FileMapEntryIterator ( rootDirectory );
+     }
+
+     public int  size ( )
+     //////////////////////////////////////////////////////////////////////
+     {
+       String [ ]  files = rootDirectory.list ( );
+
+       if ( files == null ) return 0;
+
+       return files.length;
+     }
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+     }

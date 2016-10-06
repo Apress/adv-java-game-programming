@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+  "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:login="http://croftsoft.com/wyrm/xsl/login">
+  <head>
+    <title>
+      Welcome to the Wyrm!
+    </title>
+    <base target="_top" />
+  </head>
+  <body>
+
+<p align="center">
+  <login:message>Welcome to the Wyrm, <login:username>friend</login:username>!</login:message>
+</p>
+
+<form method="post" action="servlet">
+  <table bgcolor="lightgreen" align="center"><tr><td>
+  <table cellspacing="10" align="center" bgcolor="#CCFFCC">
+    <tr>
+      <td>
+        Username
+      </td>
+      <td>
+        <input type="text" name="username" size="10" login:value="" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Password
+      </td>
+      <td>
+        <input type="password" name="password" size="10" />
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
+        <input type="submit" value="Enter"  />
+      </td>
+    </tr>
+  </table>
+  </td></tr></table>
+  <input type="hidden" name="request" value="login" />
+</form>
+
+<center>
+<form method="post" action="servlet">
+  <input type="submit" value="Create New User" />
+  <input type="hidden" name="request" value="createUser" />
+</form>
+</center>
+
+  </body>
+</html>

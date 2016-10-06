@@ -1,0 +1,27 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+  jaxb:version="1.0"
+  targetNamespace="http://croftsoft.com/apps/wyrm/xjc"
+       xmlns:wyrm="http://croftsoft.com/apps/wyrm/xjc">
+
+  <element name="response" type="wyrm:ResponseType"/>
+
+  <complexType name="ResponseType">
+    <annotation>
+      <appinfo>
+        <jaxb:class>
+          <jaxb:javadoc>
+            Simple response.
+          </jaxb:javadoc>
+        </jaxb:class>
+      </appinfo>
+    </annotation>
+    <sequence>
+      <element name="type"     type="string"/>
+      <element name="granted"  type="boolean"/>
+      <element name="message"  type="string"/>
+      <element name="username" type="string"/>
+    </sequence>
+  </complexType>
+
+</schema>

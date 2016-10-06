@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+  "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>
+      Healer \ Wyrm
+    </title>
+  </head>
+  <body>
+
+<p align="center">
+  You are visiting the Healer.
+</p>
+
+<p align="center">
+  Healing will cost you 10 gold pieces.
+</p>
+
+<form method="post" action="servlet">
+<table align="center" border="1"><tr><td>
+  <input type="radio" name="request" value="heal" checked="true" />Heal<br />
+  <input type="radio" name="request" value="town" />Return to Town<br />
+  </td></tr>
+  <tr><td colspan="2">
+  <input type="submit" value="Choose"  />
+</td></tr></table>
+</form>
+
+  </body>
+</html>

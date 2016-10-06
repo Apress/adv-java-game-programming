@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+  PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+  "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
+
+<web-app>
+
+  <servlet>
+    <servlet-name>
+      wyrm
+    </servlet-name>
+    <servlet-class>
+      com.croftsoft.apps.wyrm.servlet.WyrmServlet
+    </servlet-class>
+    <init-param>
+      <param-name>param1</param-name>
+      <param-value>value1</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>
+      wyrm
+    </servlet-name>
+    <url-pattern>
+      /servlet
+    </url-pattern>
+  </servlet-mapping>
+
+</web-app>

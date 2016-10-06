@@ -1,0 +1,48 @@
+     package com.croftsoft.apps.chat.response;
+
+     import com.croftsoft.core.lang.NullArgumentException;
+
+     import com.croftsoft.core.animation.model.ModelId;
+
+     /*********************************************************************
+     * Response to a CreateModelRequest.
+     *
+     * @version
+     *   2003-06-10
+     * @since
+     *   2003-06-10
+     * @author
+     *   <a href="http://www.croftsoft.com/">David Wallace Croft</a>
+     *********************************************************************/
+
+     public final class  CreateModelResponse
+       extends AbstractResponse
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+     {
+
+     private static final long  serialVersionUID = 0L;
+
+     //
+
+     private final ModelId  modelId;
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     public  CreateModelResponse ( ModelId  modelId )
+     //////////////////////////////////////////////////////////////////////
+     {
+       super ( false );
+
+       this.modelId = modelId;
+     }
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     public ModelId  getModelId ( ) { return modelId; }
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+     }

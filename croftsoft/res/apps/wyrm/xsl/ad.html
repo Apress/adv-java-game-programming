@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+  "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:template="http://croftsoft.com/wyrm/xsl/template">
+
+  <head>
+    <title>Wyrm</title>
+    <base target="_top" />
+  </head>
+
+  <body bgcolor="#CCFFCC">
+    <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="1"><tr><td>
+    <table cellpadding="10" cellspacing="0" width="100%" border="1">
+      <tr height="100%">
+        <td valign="top" align="left">
+          <p align="left">
+            <!-- script type="text/JavaScript"
+              src="http://rcm.amazon.com/e/cm?t=croftsoft-20&amp;p=8&amp;o=1&amp;l=bn1&amp;browse=471280&amp;mode=videogames&amp;amp;lt1=_blank">
+            </script -->
+            <noscript>
+              <map name="boxmap">
+                <area target="_blank" shape="RECT" coords="14, 200, 103, 207"
+                  href="http://rcm.amazon.com/e/cm/privacy-policy.html?o=1" />
+                <area target="_blank" coords="0,0,10000,10000"
+                  href="http://www.amazon.com/exec/obidos/redirect-home/croftsoft-20" />
+              </map>
+              <img src="http://rcm-images.amazon.com/images/G/01/rcm/120x240.gif"
+                width="120" height="240" border="0" usemap="#boxmap" alt="Shop at Amazon.com" />
+            </noscript>
+          </p>
+          <center>
+            <form method="post" action="servlet">
+              <input type="submit" value="Logout"  />
+              <input type="hidden" name="request" value="logout" />
+            </form>
+          </center>
+        </td>
+        <td valign="top" align="center" width="100%">
+          <table height="100%" width="100%" align="center"
+            cellpadding="20" cellspacing="0" bgcolor="white">
+            <tr>
+              <td>
+                <template:content>CONTENT</template:content>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td valign="top" align="right">
+          <p align="center">
+            <template:name>NAME</template:name><br />
+            Health <template:health>999</template:health><br />
+            Wealth <template:wealth>999</template:wealth>
+          </p>
+        </td>
+      </tr>
+    </table>
+    </td></tr></table>
+  </body>
+</html>

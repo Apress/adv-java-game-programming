@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="wyrm.xsl"?>
+
+<ns1:responseState xmlns:ns1="http://croftsoft.com/apps/wyrm/xjc">
+<username>a</username>
+<credits>0.0</credits>
+<message/>
+<state>town</state>
+<pcName>Unnamed Hero</pcName>
+<health>10</health>
+<wealth>100</wealth>
+
+<level>0</level>
+<experience>0</experience>
+</ns1:responseState>

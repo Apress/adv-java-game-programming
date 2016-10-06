@@ -1,0 +1,325 @@
+     package com.croftsoft.apps.compiler.mini.parse;
+
+     import java_cup.runtime.*;
+
+     import com.croftsoft.apps.compiler.mini.node.*;
+
+     /*********************************************************************
+     * Parses the Mini programming language.
+     *
+     * <P>
+     *
+     * Built using the
+     *
+     * CUP Parser Generator for Java
+     * (<A HREF="http://www.cs.princeton.edu/~appel/modern/java/CUP/">
+     * http://www.cs.princeton.edu/~appel/modern/java/CUP/</A>).
+     *
+     * @version
+     *   1999-04-27
+     * @author
+     *   <A HREF="http://www.alumni.caltech.edu/~croft/">David W. Croft</A>
+     *********************************************************************/
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     action code
+     {:
+     //////////////////////////////////////////////////////////////////////
+     // Action Code
+     //////////////////////////////////////////////////////////////////////
+     :};
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     parser code
+     {:
+
+     protected CUPTokenScanner  cupTokenScanner;
+
+     public  MiniParser ( CUPTokenScanner  cupTokenScanner )
+     //////////////////////////////////////////////////////////////////////
+     {
+       this.cupTokenScanner = cupTokenScanner;
+     }
+
+     :};
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     init with {: :};
+     scan with {: return cupTokenScanner.nextToken ( ); :};
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     terminal          BEGIN, CALL, DO, ELSE, END, IF, INTEGER, FI;
+     terminal          PROCEDURE, READ, THEN, TO, WHILE, WRITE;
+     terminal          ASSIGN;
+     terminal          PLUS, MINUS, TIMES, DIVIDE, MOD, EXP, UMINUS;
+     terminal          EQ, NE, GT, LT, GE, LE;
+     terminal          SEMICOLON, LPAREN, RPAREN, COMMA;
+     terminal Integer  CONSTANT;
+     terminal String   NAME;
+
+     non terminal AssignmentStatementMiniNode      assignmentStatement;
+     non terminal BlockMiniNode                    block;
+     non terminal ComparisonMiniNode               comparison;
+     non terminal ConditionalStatementMiniNode     conditionalStatement;
+     non terminal DeclarationMiniNode              declaration;
+     non terminal DeclarationSequenceMiniNode      declarationSequence;
+     non terminal DefiniteLoopStatementMiniNode    definiteLoop;
+     non terminal ElementMiniNode                  element;
+     non terminal ExpressionMiniNode               expression;
+     non terminal ExpressionSequenceMiniNode       expressionList;
+     non terminal IndefiniteLoopStatementMiniNode  indefiniteLoop;
+     non terminal InputStatementMiniNode           inputStatement;
+     non terminal NameMiniNode                     name1;
+     non terminal NameSequenceMiniNode             nameList;
+     non terminal OperatorMiniNode                 weakOperator;
+     non terminal OperatorMiniNode                 strongOperator;
+     non terminal OutputStatementMiniNode          outputStatement;
+     non terminal ParameterSequenceMiniNode        parameterList;
+     non terminal ProcedureCallStatementMiniNode   procedureCall;
+     non terminal ProgramMiniNode                  program;
+     non terminal RelationMiniNode                 relation;
+     non terminal StatementMiniNode                statement;
+     non terminal StatementSequenceMiniNode        statementSequence;
+     non terminal TermMiniNode                     term;
+
+     precedence nonassoc  EQ, NE, GT, LT, GE, LE;
+     precedence left      PLUS, MINUS;
+     precedence left      TIMES, DIVIDE, MOD;
+     precedence left      UMINUS, LPAREN;
+     precedence right     EXP;
+
+     //////////////////////////////////////////////////////////////////////
+     // Grammar
+     //////////////////////////////////////////////////////////////////////
+
+// Where does "error" go?
+
+     start with program;
+
+     program ::=
+       block:b
+       {:
+         try
+         {
+           RESULT = new ProgramMiniNode ( b );
+         }
+         catch ( SemanticErrorException  ex )
+         {
+           System.err.println ( ex.getMessage ( ) );
+//         RESULT = error;
+           throw ex;
+         }
+       :}
+       ;
+
+     block ::=
+       BEGIN declarationSequence:ds statementSequence:ss END
+       {: RESULT = new BlockMiniNode ( ds, ss ); :}
+       |
+       BEGIN statementSequence:ss END
+       {: RESULT = new BlockMiniNode ( ss ); :}
+       ;
+
+     declarationSequence ::=
+       declaration:d
+       {: RESULT = new DeclarationSequenceMiniNode ( d ); :}
+       |
+       declarationSequence:ds declaration:d
+       {: RESULT = new DeclarationSequenceMiniNode ( ds, d ); :}
+       ;
+
+     statementSequence ::=
+       statement:s
+       {: RESULT = new StatementSequenceMiniNode ( s ); :}
+       |
+       statementSequence:ss statement:s
+       {: RESULT = new StatementSequenceMiniNode ( ss, s ); :}
+       ;
+
+     declaration ::=
+       INTEGER nameList:nL SEMICOLON
+       {: RESULT = new IntegerDeclarationMiniNode ( nL ); :}
+       |
+       PROCEDURE name1:n block:b SEMICOLON
+       {: RESULT = new ProcedureDeclarationMiniNode ( n, null, b ); :}
+       |
+       PROCEDURE name1:n LPAREN parameterList:pL RPAREN block:b SEMICOLON
+       {: RESULT = new ProcedureDeclarationMiniNode ( n, pL, b ); :}
+       ;
+
+     statement ::=
+       inputStatement:s
+       {: RESULT = s; :}
+       |
+       outputStatement:s
+       {: RESULT = s; :}
+       |
+       assignmentStatement:s
+       {: RESULT = s; :}
+       |
+       conditionalStatement:s
+       {: RESULT = s; :}
+       |
+       definiteLoop:s
+       {: RESULT = s; :}
+       |
+       indefiniteLoop:s
+       {: RESULT = s; :}
+       |
+       procedureCall:s
+       {: RESULT = s; :}
+       ;
+
+     inputStatement ::=
+       READ LPAREN nameList:nL RPAREN SEMICOLON
+       {: RESULT = new InputStatementMiniNode ( nL ); :}
+       ;
+
+     outputStatement ::=
+       WRITE LPAREN expressionList:eL RPAREN SEMICOLON
+       {: RESULT = new OutputStatementMiniNode ( eL ); :}
+       ;
+
+     assignmentStatement ::=
+       name1:n ASSIGN expression:e SEMICOLON
+       {: RESULT = new AssignmentStatementMiniNode ( n, e ); :}
+       ;
+
+     conditionalStatement ::=
+       IF comparison:c THEN statementSequence:ss FI SEMICOLON
+       {: RESULT = new ConditionalStatementMiniNode ( c, ss, null ); :}
+       |
+       IF comparison:c THEN statementSequence:s ELSE statementSequence:e FI
+       {: RESULT = new ConditionalStatementMiniNode ( c, s, e ); :}
+       ;
+
+     definiteLoop ::=
+       TO expression:e DO statementSequence:ss END SEMICOLON
+       {: RESULT = new DefiniteLoopStatementMiniNode ( e, ss ); :}
+       ;
+
+     indefiniteLoop ::=
+       WHILE comparison:c DO statementSequence:ss END SEMICOLON
+       {: RESULT = new IndefiniteLoopStatementMiniNode ( c, ss ); :}
+       ;
+
+     procedureCall ::=
+       CALL name1:n SEMICOLON
+       {: RESULT = new ProcedureCallStatementMiniNode ( n ); :}
+       |
+       CALL name1:n LPAREN expressionList:eL RPAREN SEMICOLON
+       {: RESULT = new ProcedureCallStatementMiniNode ( n, eL ); :}
+       ;
+
+     parameterList ::=
+       nameList:nL
+       {:
+         try
+         {
+           RESULT = new ParameterSequenceMiniNode ( nL );
+         }
+         catch ( SemanticErrorException  ex )
+         {
+           System.err.println ( ex.getMessage ( ) );
+//         RESULT = error;
+           throw ex;
+         }
+       :}
+       ;
+
+     nameList ::=
+       name1:n
+       {: RESULT = new NameSequenceMiniNode ( n ); :}
+       |
+       nameList:nL COMMA name1:n
+       {: RESULT = new NameSequenceMiniNode ( nL, n ); :}
+       ;
+
+     expressionList ::=
+       expression:e
+       {: RESULT = new ExpressionSequenceMiniNode ( null, e ); :}
+       |
+       expressionList:eL COMMA expression:e
+       {: RESULT = new ExpressionSequenceMiniNode ( eL, e ); :}
+       ;
+
+     comparison ::=
+       expression:eL relation:r expression:eR
+       {: RESULT = new ComparisonMiniNode ( eL, r, eR ); :}
+       ;
+
+     expression ::=
+       term:t
+       {: RESULT = new ExpressionMiniNode ( t ); :}
+       |
+       expression:e weakOperator:o term:t
+       {: RESULT = new ExpressionMiniNode ( e, o, t ); :}
+       ;
+
+     term ::=
+       element:e
+       {: RESULT = new TermMiniNode ( e ); :}
+       |
+       term:t strongOperator:o element:e
+       {: RESULT = new TermMiniNode ( t, o, e ); :}
+       ;
+
+     element ::=
+       CONSTANT:c
+       {: RESULT = new ConstantMiniNode ( c.intValue ( ) ); :}
+       |
+       name1:n
+       {: RESULT = n; :}
+       |
+       LPAREN expression:e RPAREN
+       {: RESULT = new ExpressionElementMiniNode ( e ); :}
+       ;
+
+     name1 ::=
+       NAME:n
+       {: RESULT = new NameMiniNode ( n ); :}
+       ;
+
+     relation ::=
+       EQ
+       {: RESULT = new RelationMiniNode ( MiniSymbols.EQ ); :}
+       |
+       LE
+       {: RESULT = new RelationMiniNode ( MiniSymbols.LE ); :}
+       |
+       LT
+       {: RESULT = new RelationMiniNode ( MiniSymbols.LT ); :}
+       |
+       GT
+       {: RESULT = new RelationMiniNode ( MiniSymbols.GT ); :}
+       |
+       GE
+       {: RESULT = new RelationMiniNode ( MiniSymbols.GE ); :}
+       |
+       NE
+       {: RESULT = new RelationMiniNode ( MiniSymbols.NE ); :}
+       ;
+
+     weakOperator ::=
+       PLUS
+       {: RESULT = new OperatorMiniNode ( MiniSymbols.PLUS ); :}
+       |
+       MINUS
+       {: RESULT = new OperatorMiniNode ( MiniSymbols.MINUS ); :}
+       ;
+
+     strongOperator ::=
+       TIMES
+       {: RESULT = new OperatorMiniNode ( MiniSymbols.TIMES ); :}
+       |
+       DIVIDE
+       {: RESULT = new OperatorMiniNode ( MiniSymbols.DIVIDE ); :}
+       ;

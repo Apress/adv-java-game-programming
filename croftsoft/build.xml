@@ -1,0 +1,1226 @@
+     <!-- 
+     //////////////////////////////////////////////////////////////////////
+     // Ant build file for the CroftSoft Code Library 
+     // David Wallace Croft (http://www.croftsoft.com/)
+     // 2003-11-06
+     //
+     // The following are some targets that demonstrate the library.
+     // Specify the desired target as a command-line argument to Ant.
+     //
+     // basics ........ game programming basics example
+     // demo .......... the CroftSoft Collection
+     // example ....... example of simple animation
+     // fullscreen .... full-screen exclusive mode animation demo
+     // input ......... example of interactive animation
+     // multiapplet ... example of a MultiApplet
+     //////////////////////////////////////////////////////////////////////
+     -->
+
+     <project name="croftsoft" default="demo">
+
+     <property name="arc_dir" value="arc"/>
+     <property name="res_dir" value="res"/>
+     <property name="src_dir" value="src"/>
+     <property name="tmp_dir" value="tmp"/>
+
+     <!--
+     The default "demo" target only requires the J2SE v1.4 libraries.
+     http://java.sun.com/j2se/
+
+     Target "collection" adds browser integration to the demo.
+     It requires Java Web Start which comes with Java 1.4.
+     http://java.sun.com/products/javawebstart/
+     -->
+
+     <!-- 
+     //////////////////////////////////////////////////////////////////////
+     // Initialization Targets
+     //////////////////////////////////////////////////////////////////////
+     -->
+
+     <target name="init">
+       <mkdir  dir="${arc_dir}"/>
+       <delete dir="${tmp_dir}"/>
+       <mkdir  dir="${tmp_dir}"/>
+       <tstamp>
+         <format property="TODAY_ISO" pattern="yyyy-MM-dd"/>
+         <format property="YEAR"      pattern="yyyy"/>
+       </tstamp>
+     </target>
+
+     <target name="init1" depends="init">
+       <property name="java_web_start_jar"
+         value="/usr/java/javaws/javaws/javaws.jar"/>
+     </target>
+
+     <target name="init2" depends="init1">
+       <property name="J2EE_HOME" value="/usr/local/j2sdkee1.3.1"/>
+       <property name="j2ee_jar"  value="${J2EE_HOME}/lib/j2ee.jar"/>
+     </target>
+
+     <!--
+     This is temporarily broken due to a compatibility bug
+     between JAXB and Ant.  For more info, see
+     http://forum.java.sun.com/thread.jsp?thread=317134&forum=34&message=1295663
+     -->
+     
+     <target name="init3" depends="init2">
+       <property name="JAXB_HOME" value="/usr/local/jaxb"/>
+       <path id="xjc_classpath">
+         <fileset
+           dir="${JAXB_HOME}/lib"
+           includes="*.jar"
+           excludes="ant.jar"/>
+       </path>
+       <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+         <classpath refid="xjc_classpath" />
+       </taskdef>
+     </target>
+
+     <!-- 
+     //////////////////////////////////////////////////////////////////////
+     // Preparation Targets
+     //////////////////////////////////////////////////////////////////////
+     -->
+
+     <target name="basics_prep" depends="init">
+       <copy todir="${tmp_dir}/media/basics">
+         <fileset dir="${res_dir}/ajgp/basics/media">
+           <include name="croftsoft.png"/>
+           <include name="drip.wav"/>
+         </fileset>
+       </copy>
+     </target>
+
+     <target name="chat_prep" depends="init">
+       <copy todir="${tmp_dir}/apps/chat/avatar">
+         <fileset dir="${res_dir}/apps/chat/avatar">
+           <include name="*.png"/>
+         </fileset>
+       </copy>
+     </target>
+
+     <target name="dodger_prep" depends="init">
+       <copy todir="${tmp_dir}/media/dodger">
+         <fileset dir="${res_dir}/apps/dodger/media">
+           <include name="dodger_green.png"/>
+           <include name="dodger_yellow.png"/>
+           <include name="dodger_red.png"/>
+           <include name="dodger_bang.png"/>
+           <include name="dodger_boom.png"/>
+           <include name="bang.wav"/>
+           <include name="explode.wav"/>
+         </fileset>
+       </copy>
+     </target>
+
+     <target name="fraction_prep" depends="init">
+       <copy todir="${tmp_dir}/media/fraction">
+         <fileset dir="${res_dir}/apps/fraction/media">
+           <include name="bongo.wav"/>
+           <include name="pop.wav"/>
+         </fileset>
+       </copy>
+     </target>
+
+     <target name="mars_prep" depends="init">
+       <copy todir="${tmp_dir}/media/mars">
+         <fileset dir="${res_dir}/apps/mars/media">
+           <include name="bang.wav"/>
+           <include name="dry_fire.wav"/>
+           <include name="explode.wav"/>
+           <include name="bullet.png"/>
+           <include name="tank_body.png"/>
+           <include name="tank_tread_0.png"/>
+           <include name="tank_tread_1.png"/>
+           <include name="tank_tread_2.png"/>
+           <include name="tank_tread_3.png"/>
+           <include name="tank_tread_4.png"/>
+           <include name="tank_turret.png"/>
+         </fileset>
+       </copy>
+     </target>
+
+     <target name="road_prep" depends="init">
+       <copy todir="${tmp_dir}/media/road">
+         <fileset dir="${res_dir}/apps/road/media">
+           <include name="*.png"/>
+         </fileset>
+       </copy>
+     </target>
+
+     <target name="score_prep" depends="init">
+       <mkdir dir="${tmp_dir}"/>
+     </target>
+
+     <target name="shooter_prep" depends="init">
+       <copy todir="${tmp_dir}/media/shooter">
+         <fileset dir="${res_dir}/apps/shooter/media">
+           <include name="shooter_bang.png"/>
+           <include name="shooter_boom.png"/>
+           <include name="shooter_rest.png"/>
+           <include name="bang.wav"/>
+           <include name="explode.wav"/>
+         </fileset>
+       </copy>
+     </target>
+
+     <target name="sprite_prep" depends="init">
+       <copy todir="${tmp_dir}/images/sprite">
+         <fileset dir="${res_dir}/apps/sprite/images">
+           <include name="david.png"/>
+           <include name="david2.png"/>
+           <include name="david_left.png"/>
+           <include name="david_right.png"/>
+         </fileset>
+       </copy>
+       <copy todir="${tmp_dir}/images/sprite/tile">
+         <fileset dir="${res_dir}/apps/sprite/images/tile">
+           <include name="clear_brick_32x32.png"/>
+           <include name="cloud_256x256.png"/>
+         </fileset>
+       </copy>
+     </target>
+
+     <target name="tile_prep" depends="init">
+       <copy todir="${tmp_dir}/apps/tile">
+         <fileset dir="${res_dir}/apps/tile">
+           <include name="tile_map.png"/>
+         </fileset>
+       </copy>
+       <copy todir="${tmp_dir}/apps/tile/tiles">
+         <fileset dir="${res_dir}/apps/tile/tiles">
+           <include name="*.png"/>
+         </fileset>
+       </copy>
+     </target>
+
+     <target name="zombie_prep" depends="init">
+       <copy todir="${tmp_dir}/audio/zombie">
+         <fileset dir="${res_dir}/apps/zombie/audio">
+           <include name="bark.wav"/>
+           <include name="hit.wav"/>
+           <include name="shotgun.wav"/>
+         </fileset>
+       </copy>
+       <copy todir="${tmp_dir}/images/zombie">
+         <fileset dir="${res_dir}/apps/zombie/images">
+           <include name="zombie1.gif"/>
+           <include name="zombie2.gif"/>
+           <include name="background.gif"/>
+         </fileset>
+       </copy>
+     </target>
+
+     <target name="collection_prep1"
+       depends="basics_prep,dodger_prep,fraction_prep,mars_prep"/>
+
+     <target name="collection_prep2"
+       depends="road_prep,shooter_prep,sprite_prep,tile_prep,zombie_prep"/>
+
+     <target name="collection_prepare"
+       depends="collection_prep1,collection_prep2">
+
+       <copy file="${res_dir}/apps/images/croftsoft.png"
+         todir="${tmp_dir}/images"/>
+
+     </target>
+
+     <target name="collection_compile" depends="collection_prepare">
+
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include
+           name="com/croftsoft/apps/collection/CroftSoftCollection.java"/>
+         <include name="com/croftsoft/ajgp/basics/BasicsExample.java"/>
+         <include name="com/croftsoft/apps/backpropxor/BackpropXor.java"/>
+         <include name="com/croftsoft/apps/clock/DigitalClock.java"/>
+         <include name="com/croftsoft/apps/color/ColorTest.java"/>
+         <include name="com/croftsoft/apps/dice/Dice.java"/>
+         <include name="com/croftsoft/apps/dodger/Dodger.java"/>
+<!--
+         <include name="com/croftsoft/apps/dungeon/Main.java"/>
+-->
+         <include name="com/croftsoft/apps/evolve/Evolve.java"/>
+         <include name="com/croftsoft/apps/fraction/Fraction.java"/>
+         <include name="com/croftsoft/apps/insight/Insight.java"/>
+         <include name="com/croftsoft/apps/mars/Main.java"/>
+         <include name="com/croftsoft/apps/midi/Main.java"/>
+         <include name="com/croftsoft/apps/rainbow/Rainbow.java"/>
+         <include name="com/croftsoft/apps/road/Main.java"/>
+         <include name="com/croftsoft/apps/scribble/Scribble.java"/>
+         <include name="com/croftsoft/apps/shooter/Shooter.java"/>
+         <include name="com/croftsoft/apps/sprite/SpriteDemo.java"/>
+         <include name="com/croftsoft/apps/tile/Tile.java"/>
+         <include name="com/croftsoft/apps/zombie/Zombie.java"/>
+       </javac>
+
+     </target>
+
+     <target name="collection_jar" depends="collection_compile">
+       <echo
+         file="manifest.txt" message=
+         "Main-Class: com.croftsoft.apps.collection.CroftSoftCollection" />
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/collection.jar"
+         manifest="manifest.txt"
+         update="false"/>
+       <delete file="manifest.txt"/>
+       <delete dir="${tmp_dir}"/>
+     </target>
+
+     <target name="demo" depends="collection_jar">
+       <java fork="true" jar="${arc_dir}/collection.jar"/>
+     </target>
+
+     <target name="collection_browser_integration"
+       depends="init1,collection_compile">
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <classpath>
+           <pathelement location="${java_web_start_jar}"/>
+         </classpath>
+         <include name="com/croftsoft/core/jnlp/JnlpServicesImpl.java"/>
+       </javac>
+     </target>
+
+     <target name="collection"
+       depends="collection_browser_integration,collection_jar">
+       <java fork="true" jar="${arc_dir}/collection.jar"/>
+     </target>
+
+     <!-- 
+     //////////////////////////////////////////////////////////////////////
+     // Compile Targets
+     //////////////////////////////////////////////////////////////////////
+     -->
+
+     <target name="ads_compile">
+       <delete dir="jar"/>
+       <mkdir  dir="jar"/>
+       <javac srcdir="${src_dir}" destdir="jar">
+         <include name="com/croftsoft/apps/ads/Ads.java"/>
+       </javac>
+     </target>
+
+     <target name="ads_jar" depends="ads_compile">
+       <jar 
+         jarfile="ads.jar"
+         basedir="jar" />
+     </target>
+
+     <target name="agoracast_compile">
+       <delete dir="jar"/>
+       <mkdir  dir="jar"/>
+       <javac srcdir="${src_dir}" destdir="jar">
+         <include name="com/croftsoft/agoracast/c2p/**/*.java"/>
+       </javac>
+     </target>
+
+     <target name="agoracast_jar" depends="agoracast_compile">
+       <copy file="bld/agoracast/license.txt" todir="jar"/>
+       <copy file="bld/agoracast/doc.html"    todir="jar"/>
+       <copy file="bld/agoracast/icon.gif"    todir="jar"/>
+       <copy file="bld/agoracast/splash.jpg"  todir="jar"/>
+       <jar 
+         jarfile="agoracast.jar"
+         basedir="jar"
+         manifest="bld/agoracast/manifest.txt"/>
+       <signjar
+         jar="agoracast.jar"
+         storepass="${password}"
+         alias="myself"
+         keystore="myKeystore"
+         keypass="${password}" />
+     </target>
+
+     <target name="basics" depends="basics_prep">
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include name="com/croftsoft/ajgp/basics/BasicsExample.java"/>
+       </javac>
+       <echo
+         file="manifest.txt"
+         message="Main-Class: com.croftsoft.ajgp.basics.BasicsExample" />
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/basics.jar"
+         manifest="manifest.txt"
+         update="false"/>
+       <delete file="manifest.txt"/>
+       <delete dir="${tmp_dir}"/>
+       <java fork="true" jar="${arc_dir}/basics.jar"/>  
+     </target>
+
+     <target name="chat" depends="chat_prep,init2">
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include
+           name="com/croftsoft/apps/chat/ChatApplet.java"/>
+       </javac>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/chat.jar"
+         manifest="${res_dir}/apps/chat/manifest.txt"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+       <property name="classes_dir" value="${tmp_dir}/WEB-INF/classes"/>
+       <mkdir dir="${classes_dir}"/>
+       <javac
+         srcdir="${src_dir}"
+         destdir="${classes_dir}"
+         classpath="${j2ee_jar}">
+         <include
+           name="com/croftsoft/apps/chat/ChatServlet.java"/>
+       </javac>
+       <copy
+         overwrite="true"
+         file="${arc_dir}/chat.jar"
+         todir="${tmp_dir}"/>
+       <copy
+         overwrite="true"
+         file="${res_dir}/apps/chat/index.html"
+         todir="${tmp_dir}"/>
+       <copy
+         overwrite="true"
+         file="${res_dir}/apps/chat/WEB-INF/web.xml"
+         todir="${tmp_dir}/WEB-INF"/>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/chat.war"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+     </target>
+
+     <target name="example" depends="init">
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include name="com/croftsoft/ajgp/anim/AnimationExample.java"/>
+       </javac>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/example.jar"
+         manifest="${res_dir}/ajgp/example/manifest.txt"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+       <java fork="true" jar="${arc_dir}/example.jar"/>  
+     </target>
+
+     <target name="fraction" depends="fraction_prep">
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include name="com/croftsoft/apps/fraction/Fraction.java"/>
+       </javac>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/fraction.jar"
+         manifest="${res_dir}/apps/fraction/manifest.txt"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+       <java fork="true" jar="${arc_dir}/fraction.jar"/>  
+     </target>
+
+     <target name="fullscreen" depends="init">
+       <copy todir="${tmp_dir}/media/fullscreen">
+         <fileset dir="${res_dir}/ajgp/fullscreen/media">
+           <include name="clear_brick_32x32.png"/>
+         </fileset>
+       </copy>
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include name="com/croftsoft/ajgp/grap/FullScreenDemo.java"/>
+       </javac>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/fullscreen.jar"
+         manifest="${res_dir}/ajgp/fullscreen/manifest.txt"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+       <java fork="true" jar="${arc_dir}/fullscreen.jar"/>  
+     </target>
+
+     <!-- Tests WindowedLoopGovernor -->
+     <target name="governor" depends="init">
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include name="com/croftsoft/core/util/loop/WindowedLoopGovernor.java"/>
+       </javac>
+       <echo
+         file="manifest.txt"
+         message="Main-Class: com.croftsoft.core.util.loop.WindowedLoopGovernor" />
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/governor.jar"
+         manifest="manifest.txt"
+         update="false"/>
+       <delete file="manifest.txt"/>
+       <delete dir="${tmp_dir}"/>
+       <java fork="true" jar="${arc_dir}/governor.jar"/>  
+     </target>
+
+     <target name="input" depends="init">
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include name="com/croftsoft/ajgp/input/InputExample.java"/>
+       </javac>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/input.jar"
+         manifest="${res_dir}/ajgp/input/manifest.txt"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+       <java fork="true" jar="${arc_dir}/input.jar"/>
+     </target>
+
+     <target name="mars" depends="mars_prep">
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include name="com/croftsoft/apps/mars/Main.java"/>
+       </javac>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/mars.jar"
+         manifest="${res_dir}/apps/mars/manifest.txt"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+       <java fork="true" jar="${arc_dir}/mars.jar"/>
+     </target>
+
+     <target name="mars_net" depends="mars_prep,init2">
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include name="com/croftsoft/apps/mars/net/NetMain.java"/>
+         <include name="com/croftsoft/apps/mars/net/GameData.java"/>
+         <include
+           name="com/croftsoft/apps/mars/ai/DirectedTankOperator.java"/>
+       </javac>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/mars.jar"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+       <property name="classes_dir" value="${tmp_dir}/WEB-INF/classes"/>
+       <mkdir dir="${classes_dir}"/>
+       <javac
+         srcdir="${src_dir}"
+         destdir="${classes_dir}"
+         classpath="${j2ee_jar}">
+         <include name="com/croftsoft/apps/mars/net/MarsServlet.java"/>
+       </javac>
+       <copy
+         overwrite="true"
+         file="${arc_dir}/mars.jar"
+         todir="${tmp_dir}"/>
+       <copy
+         overwrite="true"
+         file="${res_dir}/apps/mars/index.html"
+         todir="${tmp_dir}"/>
+       <copy
+         overwrite="true"
+         file="${res_dir}/apps/mars/WEB-INF/web.xml"
+         todir="${tmp_dir}/WEB-INF"/>
+       <copy
+         overwrite="true"
+         file="${res_dir}/apps/mars/WEB-INF/mars.xml"
+         todir="${tmp_dir}/WEB-INF"/>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/mars.war"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+     </target>
+
+     <target name="multiapplet" depends="init1">
+       <copy file="${res_dir}/ajgp/multiapplet/media/frame_icon.png"
+         todir="${tmp_dir}/media"/>
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <classpath>
+           <pathelement location="${java_web_start_jar}"/>
+         </classpath>
+         <include name="com/croftsoft/core/jnlp/JnlpServicesImpl.java"/>
+         <include name="com/croftsoft/ajgp/anim/ExampleMultiApplet.java"/>
+         <include name="com/croftsoft/ajgp/anim/AnimationExample.java"/>
+       </javac>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/multiapplet.jar"
+         manifest="${res_dir}/ajgp/multiapplet/manifest.txt"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+       <java fork="true" jar="${arc_dir}/multiapplet.jar"/>
+     </target>
+
+     <target name="retirement" depends="init2">
+       <delete dir="${tmp_dir}"/>
+       <property name="classes_dir" value="${tmp_dir}/WEB-INF/classes"/>
+       <mkdir  dir="${classes_dir}"/>
+       <javac
+         srcdir="${src_dir}"
+         destdir="${classes_dir}"
+         classpath="${j2ee_jar}">
+         <include name="com/croftsoft/apps/retirement/RetirementServlet.java"/>
+       </javac>
+       <copy
+          file="res/apps/retirement/index.html"
+          todir="${tmp_dir}"
+          overwrite="true"/>
+       <copy
+          file="${res_dir}/apps/retirement/web.xml"
+          todir="${tmp_dir}/WEB-INF"
+          overwrite="true"/>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/retirement.war"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+     </target>
+
+     <target name="road" depends="road_prep">
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include name="com/croftsoft/apps/road/Main.java"/>
+       </javac>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/road.jar"
+         manifest="${res_dir}/apps/road/manifest.txt"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+       <java fork="true" jar="${arc_dir}/road.jar"/>
+     </target>
+
+     <target name="score" depends="score_prep,init2">
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include name="com/croftsoft/ajgp/http/ScoreApplet.java"/>
+       </javac>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/score.jar"
+         manifest="${res_dir}/ajgp/score/manifest.txt"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+       <property name="classes_dir" value="${tmp_dir}/WEB-INF/classes"/>
+       <mkdir dir="${classes_dir}"/>
+       <javac
+         srcdir="${src_dir}"
+         destdir="${classes_dir}"
+         classpath="${j2ee_jar}">
+         <include name="com/croftsoft/ajgp/http/ScoreServlet.java"/>
+       </javac>
+       <copy
+         overwrite="true"
+         file="${arc_dir}/score.jar"
+         todir="${tmp_dir}"/>
+       <copy
+         overwrite="true"
+         file="${res_dir}/ajgp/score/index.html"
+         todir="${tmp_dir}"/>
+       <copy
+         overwrite="true"
+         file="${res_dir}/ajgp/score/WEB-INF/web.xml"
+         todir="${tmp_dir}/WEB-INF"/>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/score.war"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+     </target>
+
+     <target name="sprite" depends="sprite_prep">
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include name="com/croftsoft/apps/sprite/SpriteDemo.java"/>
+       </javac>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/sprite.jar"
+         manifest="${res_dir}/apps/sprite/manifest.txt"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+       <java fork="true" jar="${arc_dir}/sprite.jar"/>  
+     <!--
+       <property name="sprite_dir"
+         value="/home/croft/hosts/croftsoft/htdocs/library/tutorials/sprite/applet/"/>
+     -->
+     </target>
+
+     <target name="tag3d_compile">
+       <delete dir="jar"/>
+       <mkdir  dir="jar"/>
+       <javac srcdir="${src_dir}" destdir="jar" classpath="${j3djars}">
+         <include name="com/croftsoft/apps/tag3d/**/*.java"/>
+       </javac>
+     </target>
+
+     <target name="tag3d_jar" depends="tag3d_compile">
+       <jar 
+         jarfile="tag3d.jar"
+         basedir="jar"
+         manifest="bld/apps/tag3d/manifest.txt"/>
+     </target>
+
+     <target name="tile" depends="tile_prep">
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include name="com/croftsoft/apps/tile/Tile.java"/>
+       </javac>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/tile.jar"
+         manifest="${res_dir}/apps/tile/manifest.txt"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+       <java fork="true" jar="${arc_dir}/tile.jar"/>  
+     </target>
+
+     <target name="wyrm_compile">
+       <delete dir="jar"/>
+       <mkdir  dir="jar"/>
+       <delete dir="tmp"/>
+       <mkdir  dir="tmp"/>
+       <xjc
+         target="tmp"
+         readonly="true">
+         <schema dir="${src_dir}/com/croftsoft/apps/wyrm/xsd" includes="*.xsd" />
+       </xjc>
+       <javac
+         srcdir="${src_dir};tmp"
+         destdir="jar">
+         <classpath>
+           <pathelement location="${j2ee_jar}"/>
+           <path refid="xjc_classpath"/>
+         </classpath>
+         <include name="com/croftsoft/apps/wyrm/**/*.java"/>
+       </javac>
+       <delete dir="war"/>
+       <mkdir  dir="war/WEB-INF/classes"/>
+       <javac
+         srcdir="${src_dir};tmp"
+         destdir="war/WEB-INF/classes">
+         <classpath>
+           <pathelement location="${j2ee_jar}"/>
+           <path refid="xjc_classpath"/>
+         </classpath>
+         <include name="com/croftsoft/apps/wyrm/servlet/WyrmServlet.java"/>
+       </javac>
+       <delete dir="tmp"/>
+     </target>
+
+     <target name="wyrm_jar" depends="wyrm_compile">
+       <mkdir dir="jar/META-INF"/>
+       <copy file="bld/apps/wyrm/META-INF/ejb-jar.xml"       todir="jar/META-INF"/>
+       <copy file="bld/apps/wyrm/META-INF/jboss.xml"         todir="jar/META-INF"/>
+       <copy file="bld/apps/wyrm/META-INF/jbosscmp-jdbc.xml" todir="jar/META-INF"/>
+       <jar 
+         jarfile="wyrm.jar"
+         basedir="jar"/>
+       <delete dir="jar"/>
+       <copy overwrite="true" file="bld/apps/wyrm/index.html"       todir="war"/>
+       <copy overwrite="true" file="bld/apps/wyrm/WEB-INF/web.xml"  todir="war/WEB-INF"/>
+       <copy overwrite="true" file="bld/apps/wyrm/about/index.html" todir="war/about"/>
+       <copy overwrite="true" file="bld/apps/wyrm/help/index.html"  todir="war/help"/>
+       <copy overwrite="true" file="bld/apps/wyrm/jaxb.properties"
+         todir="war/WEB-INF/classes/com/croftsoft/apps/wyrm/xjc"/>
+       <copy overwrite="true" todir="war/xsl">
+         <fileset dir="${res_dir}/apps/wyrm/xsl">
+           <include name="*.xml"/>
+           <include name="*.xsl"/>
+         </fileset>
+       </copy>
+       <copy overwrite="true" todir="war/media">
+         <fileset dir="${res_dir}/apps/wyrm/media">
+           <include name="*.gif"/>
+           <include name="*.jpg"/>
+         </fileset>
+       </copy>
+       <mkdir dir="war/xsd" />
+       <copy overwrite="true" todir="war/xsd">
+         <fileset dir="${src_dir}/com/croftsoft/apps/wyrm/xsd">
+           <include name="*.xsd" />
+         </fileset>
+       </copy>
+       <jar 
+         jarfile="wyrm.war"
+         basedir="war"/>
+       <delete dir="war"/>
+     </target>
+
+     <target name="zombie" depends="zombie_prep">
+       <javac srcdir="${src_dir}" destdir="${tmp_dir}">
+         <include name="com/croftsoft/apps/zombie/Zombie.java"/>
+       </javac>
+       <jar 
+         basedir="${tmp_dir}"
+         destfile="${arc_dir}/zombie.jar"
+         manifest="${res_dir}/apps/zombie/manifest.txt"
+         update="false"/>
+       <delete dir="${tmp_dir}"/>
+       <java fork="true" jar="${arc_dir}/zombie.jar"/>  
+     </target>
+
+     <!-- 
+     //////////////////////////////////////////////////////////////////////
+     // Test Targets
+     //
+     // Target "test1" requires the following additional libraries:
+     // J2EE ..........:  http://java.sun.com/j2ee/
+     // JNLP ..........:  
+     //
+     // Target "test2" requires the following additional libraries:
+     // Java 3D API ...:  http://java.sun.com/products/java-media/3D/
+     //
+     // Target "test3" requires the following additional libraries:
+     // JAXB 1.0 ......:  http://java.sun.com/xml/jaxb/
+     //////////////////////////////////////////////////////////////////////
+     -->
+
+     <target name="test1" depends="init2">
+       <javac srcdir="${src_dir};${tmp_dir}" destdir="${tmp_dir}">
+         <classpath>
+           <pathelement location="${java_web_start_jar}"/>
+           <pathelement location="${j2ee_jar}"/>
+         </classpath>
+         <include name="com/croftsoft/**/*.java"/>
+         <!-- The following code is excluded as it will not compile. -->
+         <exclude name="com/croftsoft/apps/compiler/**/*.java"/>
+<exclude name="com/croftsoft/apps/dungeon/**/*.java"/>
+         <exclude name="com/croftsoft/apps/tag3d/**/*.java"/>
+         <exclude name="com/croftsoft/apps/template/**/*.java"/>
+         <exclude name="com/croftsoft/apps/vaft/**/*.java"/>
+         <exclude name="com/croftsoft/apps/wyrm/**/*.java"/>
+         <exclude name="com/croftsoft/core/media/j3d/**/*.java"/>
+       </javac>
+       <delete dir="${tmp_dir}"/>
+     </target>
+
+     <target name="test2" depends="init2">
+       <delete dir="${tmp_dir}"/>
+       <mkdir  dir="${tmp_dir}"/>
+       <javac srcdir="${src_dir};${tmp_dir}" destdir="${tmp_dir}">
+         <classpath>
+           <pathelement location="${java_web_start_jar}"/>
+           <pathelement location="${j2ee_jar}"/>
+         </classpath>
+         <include name="com/croftsoft/**/*.java"/>
+         <!-- The following code is excluded as it will not compile. -->
+         <exclude name="com/croftsoft/apps/compiler/**/*.java"/>
+<exclude name="com/croftsoft/apps/dungeon/**/*.java"/>
+         <exclude name="com/croftsoft/apps/template/**/*.java"/>
+         <exclude name="com/croftsoft/apps/vaft/**/*.java"/>
+         <exclude name="com/croftsoft/apps/wyrm/**/*.java"/>
+       </javac>
+       <delete dir="${tmp_dir}"/>
+     </target>
+
+     <target name="test3" depends="init3">
+       <delete dir="${tmp_dir}"/>
+       <mkdir  dir="${tmp_dir}"/>
+       <xjc
+         target="${tmp_dir}"
+         readonly="true">
+         <schema dir="${src_dir}/com/croftsoft/apps/wyrm/xsd"
+           includes="*.xsd"/>
+       </xjc>
+       <javac srcdir="${src_dir};${tmp_dir}" destdir="${tmp_dir}">
+         <classpath>
+           <pathelement location="${java_web_start_jar}"/>
+           <path refid="xjc_classpath"/>
+         </classpath>
+         <include name="com/croftsoft/**/*.java"/>
+         <!-- The following code is excluded as it will not compile. -->
+         <exclude name="com/croftsoft/apps/compiler/**/*.java"/>
+         <exclude name="com/croftsoft/apps/template/**/*.java"/>
+         <exclude name="com/croftsoft/apps/vaft/**/*.java"/>
+       </javac>
+       <delete dir="${tmp_dir}"/>
+     </target>
+
+     <!-- 
+     //////////////////////////////////////////////////////////////////////
+     // Javadoc Targets
+     //////////////////////////////////////////////////////////////////////
+     -->
+
+     <!-- change this dependency to test3 when Ant-JAXB bug fixed. -->
+     <target name="javadoc_properties" depends="test2">
+
+       <property name="javadoc_agoracast_dir"
+         value="/home/croft/hosts/croftsoft/htdocs/library/code/javadoc/agoracast" />
+       <property name="javadoc_ajgp_dir"
+         value="/home/croft/hosts/croftsoft/htdocs/library/code/javadoc/ajgp" />
+       <property name="javadoc_apps_dir"
+         value="/home/croft/hosts/croftsoft/htdocs/library/code/javadoc/apps" />
+       <property name="javadoc_core_dir"
+         value="/home/croft/hosts/croftsoft/htdocs/library/code/javadoc/core" />
+
+       <property name="javadoc_author" value="true" />
+
+       <property name="ad2" value=
+         "&lt;p align=&quot;center&quot;&gt;
+&lt;script src=&quot;http://rcm.amazon.com/e/cm?t=croftsoft-20&amp;l=st1&amp;search=Java game&amp;mode=books&amp;p=13&amp;o=1&quot; type=&quot;text/JavaScript&quot;&gt;&lt;/script&gt;&lt;noscript&gt;
+&lt;MAP NAME=&quot;boxmap&quot;&gt;&lt;AREA SHAPE=&quot;RECT&quot; COORDS=&quot;379, 50, 460, 57&quot; HREF=&quot;http://rcm.amazon.com/e/cm/privacy-policy.html?o=1&quot;&gt;&lt;AREA COORDS=&quot;0,0,10000,10000&quot; HREF=&quot;http://www.amazon.com/exec/obidos/redirect-home/croftsoft-20&quot;&gt;&lt;/map&gt;&lt;img src=&quot;http://rcm-images.amazon.com/images/G/01/rcm/468x60.gif&quot; width=&quot;468&quot; height=&quot;60&quot; border=&quot;0&quot; usemap=&quot;#boxmap&quot; alt=&quot;Shop at Amazon.com&quot;&gt;
+&lt;/noscript&gt;
+&lt;/p&gt;" />
+
+       <property name="amazon6" value=
+"&lt;p align=&quot;center&quot;&gt;
+&lt;script src=&quot;http://rcm.amazon.com/e/cm?t=croftsoft-20&amp;l=st1&amp;search=Java game&amp;mode=books&amp;p=6&amp;o=1&quot; type=&quot;text/JavaScript&quot;&gt;&lt;/script&gt;&lt;noscript&gt;
+&lt;MAP NAME=&quot;boxmap&quot;&gt;&lt;AREA SHAPE=&quot;RECT&quot; COORDS=&quot;379, 50, 460, 57&quot; HREF=&quot;http://rcm.amazon.com/e/cm/privacy-policy.html?o=1&quot;&gt;&lt;AREA COORDS=&quot;0,0,10000,10000&quot; HREF=&quot;http://www.amazon.com/exec/obidos/redirect-home/croftsoft-20&quot;&gt;&lt;/map&gt;&lt;img src=&quot;http://rcm-images.amazon.com/images/G/01/rcm/468x60.gif&quot; width=&quot;468&quot; height=&quot;60&quot; border=&quot;0&quot; usemap=&quot;#boxmap&quot; alt=&quot;Shop at Amazon.com&quot;&gt;
+&lt;/noscript&gt;
+&lt;/p&gt;" />
+
+       <property name="amazon" value=
+"&lt;p align=&quot;center&quot;&gt;
+&lt;form METHOD=&quot;get&quot; ACTION=&quot;http://www.amazon.com/exec/obidos/external-search&quot; target=&quot;_blank&quot;&gt;
+&lt;table BORDER=&quot;1&quot; CELLPADDING=&quot;0&quot; cellspacing=&quot;0&quot; align=&quot;center&quot;&gt;
+&lt;tr&gt;
+&lt;td BGCOLOR=&quot;#FFFFFF&quot; align=&quot;center&quot; valign=&quot;middle&quot;&gt;
+&lt;font face=&quot;verdana,arial,helvetica&quot; size=&quot;-1&quot;&gt; &lt;b&gt;Search:&lt;/b&gt;&lt;/font&gt;
+&lt;select NAME=&quot;mode&quot;&gt;
+&lt;option VALUE=&quot;blended&quot;&gt;All Products
+&lt;option VALUE=&quot;books&quot; SELECTED&gt;Books
+&lt;option VALUE=&quot;music&quot;&gt;Popular Music
+&lt;option VALUE=&quot;classical-music&quot;&gt;Classical Music
+&lt;option VALUE=&quot;video&quot;&gt;Video
+&lt;option VALUE=&quot;toys&quot;&gt;Toys
+&lt;option VALUE=&quot;electronics&quot;&gt;Electronics
+&lt;/select&gt;
+&lt;/td&gt;
+&lt;td ROWSPAN=&quot;2&quot; VALIGN=&quot;middle&quot; ALIGN=&quot;center&quot; BGCOLOR=&quot;#ffffff&quot;&gt;
+Enter keywords...&lt;br&gt;
+&lt;input TYPE=&quot;text&quot; NAME=&quot;keyword&quot; SIZE=20 VALUE=&quot;Java&quot;&gt;
+&lt;input TYPE=hidden NAME=tag VALUE=croftsoft-20&gt;&lt;br&gt;
+&lt;input TYPE=&quot;submit&quot; BORDER=0 VALUE=&quot;Search&quot; NAME=&quot;Search&quot;&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td VALIGN=&quot;top&quot; ALIGN=&quot;center&quot; BGCOLOR=&quot;#000000&quot;&gt;
+&lt;a target=&quot;_blank&quot; href=&quot;http://www.amazon.com/exec/obidos/redirect-home/croftsoft-20&quot;&gt;
+&lt;img width=125 height=60 SRC=&quot;http://www.croftsoft.com/library/books/images/amazon_logo.gif&quot; BORDER=&quot;0&quot; VSPACE=&quot;0&quot;
+  ALT=&quot;Amazon.com logo&quot;&gt;&lt;/a&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/form&gt;
+&lt;/p&gt;" />
+
+       <property name="javadoc_bottom"
+         value="&lt;center&gt;CroftSoft Javadoc (${TODAY_ISO}) Copyright ${YEAR} &lt;a target=&quot;_blank&quot; href=&quot;http://www.croftsoft.com/&quot;&gt;CroftSoft Inc&lt;/a&gt;." />
+
+       <property
+         name="javadoc_footer"
+         value="&lt;a target=&quot;_top&quot; href=&quot;http://www.croftsoft.com/library/code/javadoc/&quot;&gt;CroftSoft Javadoc&lt;/a&gt;" />
+
+       <property
+         name="javadoc_header"
+         value="${javadoc_footer}
+&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;
+&lt;td colspan=&quot;2&quot; align=&quot;left&quot;&gt;
+&lt;script src=&quot;http://rcm.amazon.com/e/cm?t=croftsoft-20&amp;l=st1&amp;search=Java game&amp;mode=books&amp;p=13&amp;o=1&amp;lt1=_blank&quot; type=&quot;text/JavaScript&quot;&gt;&lt;/script&gt;&lt;noscript&gt;
+&lt;map name=&quot;boxmap&quot;&gt;&lt;area target=&quot;_blank&quot; shape=&quot;RECT&quot; coords=&quot;379, 50, 460, 57&quot; href=&quot;http://rcm.amazon.com/e/cm/privacy-policy.html?o=1&quot;&gt;&lt;area target=&quot;_blank&quot; coords=&quot;0,0,10000,10000&quot; href=&quot;http://www.amazon.com/exec/obidos/redirect-home/croftsoft-20&quot;&gt;&lt;/map&gt;&lt;img src=&quot;http://rcm-images.amazon.com/images/G/01/rcm/468x60.gif&quot; width=&quot;468&quot; height=&quot;60&quot; border=&quot;0&quot; usemap=&quot;#boxmap&quot; alt=&quot;Shop at Amazon.com&quot;&gt;
+&lt;/noscript&gt;
+&lt;em&gt;" />
+
+       <property name="javadoc_package"    value="true" />
+       <property name="javadoc_sourcepath" value="${src_dir}" />
+       <property name="javadoc_splitindex" value="true" />
+       <property name="javadoc_use"        value="true" />
+       <property name="javadoc_version"    value="true" />
+     </target>
+
+     <target name="javadoc_core" depends="javadoc_properties">
+       <property name="javadoc_destdir_core" value="${javadoc_core_dir}" />
+       <delete dir="${javadoc_destdir_core}"/>
+       <mkdir  dir="${javadoc_destdir_core}"/>
+       <javadoc
+         author      ="${javadoc_author}"
+         bottom      ="${javadoc_bottom}"
+         classpath   ="${javadoc_classpath}"
+         destdir     ="${javadoc_destdir_core}"
+         doctitle    ="The CroftSoft Java Core Library"
+         footer      ="${javadoc_footer}"
+         header      ="${javadoc_header}"
+         overview    ="src/overview.html"
+         package     ="${javadoc_package}"
+         packagenames="com.croftsoft.core.*"
+         sourcepath  ="${javadoc_sourcepath}"
+         splitindex  ="${javadoc_splitindex}"
+         use         ="${javadoc_use}"
+         version     ="${javadoc_version}"
+         windowtitle="The CroftSoft Java Core Library"
+         >
+         <classpath>
+           <pathelement location="${j2ee_jar}"/>
+           <pathelement location="${java_web_start_jar}"/>
+         </classpath>
+         <link href="http://www.javasoft.com/j2se/1.4/docs/api/" />
+         <link href="http://www.javasoft.com/j2ee/tutorial/api/" />
+         <link
+           href="http://www.javasoft.com/products/java-media/3D/forDevelopers/J3D_1_2_API/j3dapi/" />
+       </javadoc>
+       <chmod perm="644" dir="${javadoc_destdir_core}" includes="**/*"/>
+     </target>
+
+     <target name="javadoc_apps" depends="javadoc_properties">
+       <property name="javadoc_destdir_apps" value="${javadoc_apps_dir}" />
+       <delete dir="${javadoc_destdir_apps}"/>
+       <mkdir  dir="${javadoc_destdir_apps}"/>
+       <delete dir="tmp"/>
+       <mkdir  dir="tmp"/>
+<!--
+Disabled until Ant-JAX compatibility bug fixed.
+       <xjc
+         target="tmp"
+         readonly="true">
+         <schema
+           dir="${src_dir}/com/croftsoft/apps/wyrm/xsd"
+           includes="*.xsd" />
+       </xjc>
+-->
+       <javadoc
+         author      ="${javadoc_author}"
+         bottom      ="${javadoc_bottom}"
+         classpath   ="${javadoc_classpath}"
+         destdir     ="${javadoc_destdir_apps}"
+         doctitle    ="The CroftSoft Java Apps Library"
+         footer      ="${javadoc_footer}"
+         header      ="${javadoc_header}"
+         overview    ="src/overview.html"
+         package     ="${javadoc_package}"
+         packagenames="com.croftsoft.apps.*"
+         sourcepath  ="${javadoc_sourcepath};tmp"
+         splitindex  ="${javadoc_splitindex}"
+         use         ="${javadoc_use}"
+         version     ="${javadoc_version}"
+         windowtitle="The CroftSoft Java Apps Library"
+         >
+         <classpath>
+           <pathelement location="${j2ee_jar}"/>
+           <pathelement location="${java_web_start_jar}"/>
+<!--
+           <path refid="xjc_classpath"/>
+-->
+         </classpath>
+         <link href="http://www.javasoft.com/j2se/1.4/docs/api/" />
+         <link href="http://www.javasoft.com/j2ee/tutorial/api/" />
+         <link
+           href="http://www.javasoft.com/products/java-media/3D/forDevelopers/J3D_1_2_API/j3dapi/" />
+         <!--
+         This needs to reference latest version of core javadoc instead.
+         -->
+         <link href="http://www.croftsoft.com/library/code/javadoc/core/" />
+         <link href="http://www.javasoft.com/xml/jaxb/api/" />
+       </javadoc>
+       <delete dir="tmp"/>
+       <chmod perm="644" dir="${javadoc_destdir_apps}" includes="**/*"/>
+     </target>
+
+     <target name="javadoc_ajgp" depends="javadoc_properties">
+       <property name="javadoc_destdir_ajgp" value="${javadoc_ajgp_dir}" />
+       <delete dir="${javadoc_destdir_ajgp}"/>
+       <mkdir  dir="${javadoc_destdir_ajgp}"/>
+       <javadoc
+         author      ="${javadoc_author}"
+         bottom      ="${javadoc_bottom}"
+         classpath   ="${javadoc_classpath}"
+         destdir     ="${javadoc_destdir_ajgp}"
+         doctitle    ="Advanced Java Game Programming"
+         footer      ="${javadoc_footer}"
+         header      ="${javadoc_header}"
+         overview    ="src/com/croftsoft/ajgp/overview.html"
+         package     ="${javadoc_package}"
+         packagenames="com.croftsoft.ajgp.*"
+         sourcepath  ="${javadoc_sourcepath}"
+         splitindex  ="${javadoc_splitindex}"
+         use         ="${javadoc_use}"
+         version     ="${javadoc_version}"
+         windowtitle="Advanced Java Game Programming"
+         >
+         <classpath>
+           <pathelement location="${j2ee_jar}"/>
+           <pathelement location="${java_web_start_jar}"/>
+         </classpath>
+         <link href="http://www.javasoft.com/j2se/1.4/docs/api/" />
+         <link href="http://www.javasoft.com/j2ee/tutorial/api/" />
+         <link
+           href="http://www.javasoft.com/products/java-media/3D/forDevelopers/J3D_1_2_API/j3dapi/" />
+       </javadoc>
+       <chmod perm="644" dir="${javadoc_destdir_ajgp}" includes="**/*"/>
+     </target>
+
+     <target name="javadoc_agoracast" depends="javadoc_properties">
+       <property
+         name="javadoc_destdir_agoracast"
+         value="${javadoc_agoracast_dir}" />
+       <delete dir="${javadoc_destdir_agoracast}"/>
+       <mkdir  dir="${javadoc_destdir_agoracast}"/>
+       <javadoc
+         author      ="${javadoc_author}"
+         bottom      ="${javadoc_bottom}"
+         destdir     ="${javadoc_destdir_agoracast}"
+         doctitle    ="Agoracast"
+         footer      ="${javadoc_footer}"
+         header      ="${javadoc_header}"
+         overview    ="src/overview.html"
+         package     ="${javadoc_package}"
+         packagenames="com.croftsoft.agoracast.*"
+         sourcepath  ="${javadoc_sourcepath}"
+         splitindex  ="${javadoc_splitindex}"
+         use         ="${javadoc_use}"
+         version     ="${javadoc_version}"
+         windowtitle="Agoracast"
+         >
+         <classpath>
+           <pathelement location="${j2ee_jar}"/>
+           <pathelement location="${java_web_start_jar}"/>
+         </classpath>
+         <link href="http://www.javasoft.com/j2se/1.4/docs/api/" />
+         <link href="http://www.javasoft.com/j2ee/tutorial/api/" />
+         <link
+           href="http://www.javasoft.com/products/java-media/3D/forDevelopers/J3D_1_2_API/j3dapi/" />
+         <link href="http://www.croftsoft.com/library/code/javadoc/core/" />
+       </javadoc>
+       <chmod
+         perm="644"
+         dir="${javadoc_destdir_agoracast}"
+         includes="**/*"/>
+     </target>
+
+     <target name="javadoc"
+       depends="javadoc_core,javadoc_agoracast,javadoc_ajgp,javadoc_apps"
+       />
+
+     <!-- 
+     //////////////////////////////////////////////////////////////////////
+     // Installation Targets
+     //////////////////////////////////////////////////////////////////////
+     -->
+
+     <property name="deploy_dir"
+       value="/usr/local/jboss/server/default/deploy"/>
+
+     <!--
+     <property name="deploy_dir"
+       value="/usr/local/tomcat/webapps"/>
+     -->
+
+     <target name="agoracast_install" depends="agoracast_jar">
+       <property name="agoracast_dir"
+         value="/home/croft/hosts/croftsoft/htdocs/agoracast"/>
+       <copy
+         file="agoracast.jar"
+         todir="${agoracast_dir}/install"
+         overwrite="true"/>
+       <copy
+         file="bld/agoracast/doc.html"
+         tofile="${agoracast_dir}/doc/index.html"
+         overwrite="true"/>
+     </target>
+
+     <target name="chat_install" depends="chat">
+       <copy
+         file="${arc_dir}/chat.war"
+         todir="${deploy_dir}"
+         overwrite="true"/>
+     </target>
+
+     <target name="collection_install" depends="collection">
+       <property name="collection_dir"
+         value="/home/croft/hosts/croftsoft/htdocs/portfolio/collection/"/>
+       <copy
+         file="${arc_dir}/collection.jar"
+         todir="${collection_dir}/install"
+         overwrite="true"/>
+       <chmod
+         file="${collection_dir}/install/collection.jar"
+         perm="644"/>
+     </target>
+
+     <target name="fraction_install" depends="fraction">
+       <property name="fraction_dir"
+         value="/home/croft/hosts/croftsoft/htdocs/portfolio/fraction/"/>
+       <copy
+         file="${arc_dir}/fraction.jar"
+         todir="${fraction_dir}/applet"
+         overwrite="true"/>
+       <chmod
+         file="${fraction_dir}/applet/fraction.jar"
+         perm="644"/>
+     </target>
+
+     <target name="mars_install" depends="mars">
+       <property name="mars_dir"
+         value="/home/croft/hosts/croftsoft/htdocs/portfolio/mars/"/>
+       <copy
+         file="${arc_dir}/mars.jar"
+         todir="${mars_dir}/applet"
+         overwrite="true"/>
+       <chmod
+         file="${mars_dir}/applet/mars.jar"
+         perm="644"/>
+     </target>
+
+     <target name="mars_net_install" depends="mars_net">
+       <copy
+         file="${arc_dir}/mars.war"
+         todir="${deploy_dir}"
+         overwrite="true"/>
+     </target>
+
+     <target name="retirement_install" depends="retirement">
+       <copy
+         file="${arc_dir}/retirement.war"
+         todir="${deploy_dir}"
+         overwrite="true"/>
+     </target>
+
+     <target name="score_install" depends="score">
+       <copy
+         file="${arc_dir}/score.war"
+         todir="${deploy_dir}"
+         overwrite="true"/>
+     </target>
+
+     <target name="wyrm_deploy" depends="wyrm_jar">
+       <!--
+       Be sure to copy the necessary libraries to
+         /jboss/server/deploy/lib/.
+       -->
+       <move file="wyrm.jar" todir="${deploy}" overwrite="true"/>
+       <move file="wyrm.war" todir="${deploy}" overwrite="true"/>
+     </target>
+
+     <target name="wyrm" depends="wyrm_deploy" />
+
+     <!-- 
+     //////////////////////////////////////////////////////////////////////
+     // Upload Target
+     //////////////////////////////////////////////////////////////////////
+     -->
+
+     <target name="archive" depends="test1">
+       <mkdir dir="${arc_dir}"/>
+       <zip destfile="${arc_dir}/croftsoft_${TODAY_ISO}.zip"
+         basedir="${basedir}/..">
+         <include name="croftsoft/readme.txt"/>
+         <include name="croftsoft/build.xml"/>
+         <include name="croftsoft/bin/"/>
+         <include name="croftsoft/lic/afl.txt"/>
+         <include name="croftsoft/lic/gpl.txt"/>
+         <include name="croftsoft/lic/lgpl.txt"/>
+         <include name="croftsoft/lic/osl.txt"/>
+         <include name="croftsoft/res/"/>
+         <include name="croftsoft/src/**/*.java"/>
+         <include name="croftsoft/src/**/*.jcup"/>
+         <include name="croftsoft/src/**/*.jlex"/>
+         <include name="croftsoft/src/**/*.xsd"/>
+         <include name="croftsoft/src/overview.html"/>
+         <include name="croftsoft/src/**/package.html"/>
+       </zip>
+     </target>
+
+     <target name="upload" depends="archive">
+       <ftp
+         server="upload.sourceforge.net"
+         userid="anonymous"
+         password="david@croftsoft.com"
+         remotedir="/incoming"
+         action="put"
+         binary="yes"
+         passive="yes"
+         verbose="yes"
+         depends="yes">
+         <fileset dir="${arc_dir}">
+           <include name="croftsoft_${TODAY_ISO}.zip"/>
+         </fileset>
+       </ftp>
+     </target>
+
+     </project>

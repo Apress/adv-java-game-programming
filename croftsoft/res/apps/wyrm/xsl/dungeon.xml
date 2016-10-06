@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+  "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>
+      Dungeon \ Wyrm
+    </title>
+  </head>
+  <body>
+
+<p align="center">
+  You are in the Dungeon.
+</p>
+
+<p align="center">
+A rat attacks!
+</p>
+
+<form method="post" action="servlet">
+<table align="center" border="1"><tr><td>
+  <input type="radio" name="request" value="fight" checked="true" />Fight<br />
+  <input type="radio" name="request" value="flee" />Flee<br />
+  </td></tr>
+  <tr><td colspan="2">
+  <input type="submit" value="Choose"  />
+</td></tr></table>
+</form>
+
+  </body>
+</html>

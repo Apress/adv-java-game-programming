@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+  "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:login="http://croftsoft.com/wyrm/xsl/response">
+  <head>
+    <title>
+      Response \ Wyrm
+    </title>
+    <base target="_top" />
+  </head>
+  <body>
+  <table bgcolor="lightgreen" align="center"><tr><td>
+    <table cellspacing="10" align="center" bgcolor="#CCFFCC"><tr><td>
+      <p align="justify">
+        <response:message>MESSAGE</response:message>
+      </p>
+    </td></tr></table>
+  </td></tr></table>
+  <p align="center">
+    <form method="post" action="servlet">
+      <input type="submit" value="Continue" />
+    </form>
+  </p>
+  </body>
+</html>

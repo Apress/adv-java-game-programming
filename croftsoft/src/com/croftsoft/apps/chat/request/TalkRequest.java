@@ -1,0 +1,68 @@
+     package com.croftsoft.apps.chat.request;
+
+     import com.croftsoft.core.lang.NullArgumentException;
+     import com.croftsoft.core.security.Authentication;
+
+     /*********************************************************************
+     * A request to talk.
+     *
+     * @version
+     *   2003-06-20
+     * @since
+     *   2003-06-11
+     * @author
+     *   <a href="http://www.croftsoft.com/">David Wallace Croft</a>
+     *********************************************************************/
+
+     public final class  TalkRequest
+       extends CoalesceableRequest
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+     {
+
+     private static final long  serialVersionUID = 0L;
+
+     //
+
+     private final String  text;
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     public  TalkRequest (
+       Authentication  authentication,
+       String          text )
+     //////////////////////////////////////////////////////////////////////
+     {
+       super ( authentication );
+
+       NullArgumentException.check ( this.text = text );
+     }
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     public String  getText ( ) { return text; }
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     public boolean  equals ( Object  other )
+     //////////////////////////////////////////////////////////////////////
+     {
+       if ( other == null )
+       {
+         return false;
+       }
+
+       if ( other.getClass ( ) != TalkRequest.class )
+       {
+         return false;
+       }
+
+       return true;
+     }
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+     }

@@ -1,0 +1,269 @@
+     package com.croftsoft.apps.compiler;
+
+     import java.util.HashMap;
+     import java.util.Map;
+
+     import java_cup.runtime.*;
+
+     /*********************************************************************
+     * Calc parser.
+     *
+     * <P>
+     *
+     * Built using the
+     *
+     * CUP Parser Generator for Java
+     * (<A HREF="http://www.cs.princeton.edu/~appel/modern/java/CUP/">
+     * http://www.cs.princeton.edu/~appel/modern/java/CUP/</A>).
+     *
+     * @version
+     *   1999-03-16
+     * @author
+     *   <A HREF="http://www.alumni.caltech.edu/~croft/">David W. Croft</A>
+     *********************************************************************/
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     action code
+     {:
+
+     //////////////////////////////////////////////////////////////////////
+     // Action Code
+     //////////////////////////////////////////////////////////////////////
+
+     public static Integer  actExpressPlus ( Integer  e0, Integer  e1 )
+     //////////////////////////////////////////////////////////////////////
+     {
+       if ( ( e0 == null ) || ( e1 == null ) )
+       {
+         System.out.println ( "null operand" );
+         return null;
+       }
+
+       return new Integer ( e0.intValue ( ) + e1.intValue ( ) );
+     }
+
+     public static Integer  actExpressMinus ( Integer  e0, Integer  e1 )
+     //////////////////////////////////////////////////////////////////////
+     {
+       if ( ( e0 == null ) || ( e1 == null ) )
+       {
+         System.out.println ( "null operand" );
+         return null;
+       }
+
+       return new Integer ( e0.intValue ( ) - e1.intValue ( ) );
+     }
+
+     public static Integer  actExpressTimes ( Integer  e0, Integer  e1 )
+     //////////////////////////////////////////////////////////////////////
+     {
+       if ( ( e0 == null ) || ( e1 == null ) )
+       {
+         System.out.println ( "null operand" );
+         return null;
+       }
+
+       return new Integer ( e0.intValue ( ) * e1.intValue ( ) );
+     }
+
+     public static Integer  actExpressDivide ( Integer  e0, Integer  e1 )
+     //////////////////////////////////////////////////////////////////////
+     {
+       if ( ( e0 == null ) || ( e1 == null ) )
+       {
+         System.out.println ( "null operand" );
+         return null;
+       }
+
+       return new Integer ( e0.intValue ( ) / e1.intValue ( ) );
+     }
+
+     public static Integer  actExpressExponent ( Integer  e0, Integer  e1 )
+     //////////////////////////////////////////////////////////////////////
+     {
+       if ( ( e0 == null ) || ( e1 == null ) )
+       {
+         System.out.println ( "null operand" );
+         return null;
+       }
+
+       return new Integer ( power ( e0.intValue ( ), e1.intValue ( ) ) );
+     }
+
+     public static Integer  actExpressModulus ( Integer  e0, Integer  e1 )
+     //////////////////////////////////////////////////////////////////////
+     {
+       if ( ( e0 == null ) || ( e1 == null ) )
+       {
+         System.out.println ( "null operand" );
+         return null;
+       }
+
+       return new Integer ( e0.intValue ( ) % e1.intValue ( ) );
+     }
+
+     public static Integer  actExpressNegate ( Integer  e0 )
+     //////////////////////////////////////////////////////////////////////
+     {
+       if ( e0 == null )
+       {
+         System.out.println ( "null operand" );
+         return null;
+       }
+
+       return new Integer ( -e0.intValue ( ) );
+     }
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     public static int  power ( int  a, int  b )
+     //////////////////////////////////////////////////////////////////////
+     {
+       if ( b < 0 )
+       {
+         throw new IllegalArgumentException ( "negative exponent" );
+       }
+
+       int  result = 1;
+
+       for ( int  i = 0; i < b; i++ )
+       {
+         result *= a;
+       }
+
+       return result;
+     }
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     private Map  map = new HashMap ( );
+
+     public Integer  actExpressVariable ( String  variable )
+     //////////////////////////////////////////////////////////////////////
+     {
+       return ( Integer ) map.get ( variable );
+     }
+
+     public void  actWrite ( Integer  i )
+     //////////////////////////////////////////////////////////////////////
+     {
+       System.out.println ( i );
+     }
+
+     public Integer  actAssignment ( String  variable, Integer  i )
+     //////////////////////////////////////////////////////////////////////
+     {
+       map.put ( variable, i );
+       return i;
+     }
+
+     :};
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     parser code
+     {:
+
+     protected CalcScanner  calcScanner;
+
+     public  CalcParser ( CalcScanner  calcScanner )
+     //////////////////////////////////////////////////////////////////////
+     {
+       this.calcScanner = calcScanner;
+     }
+
+     :};
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     init with {: :};
+     scan with {: return calcScanner.nextToken ( ); :};
+
+     //////////////////////////////////////////////////////////////////////
+     //////////////////////////////////////////////////////////////////////
+
+     terminal          PLUS, MINUS, TIMES, DIVIDE, MOD, EXP, UMINUS;
+     terminal          EQ, NEQ, GT, LT, GE, LE;
+     terminal          SEMICOLON, LPAREN, RPAREN, WRITE, ASSIGN;
+     terminal Integer  INTEGER;
+     terminal String   VARIABLE;
+
+     non terminal Object   program, statementList, statement, write;
+     non terminal Integer  assignment, expression;
+
+     precedence nonassoc  EQ, NEQ, GT, LT, GE, LE;
+     precedence left      PLUS, MINUS;
+     precedence left      TIMES, DIVIDE, MOD;
+     precedence left      UMINUS, LPAREN;
+     precedence right     EXP;
+
+     //////////////////////////////////////////////////////////////////////
+     // Grammar
+     //////////////////////////////////////////////////////////////////////
+
+     start with program;
+
+     program       ::= statementList;
+
+     statementList ::= statement SEMICOLON statementList
+                       |
+                       statement SEMICOLON;
+
+     statement     ::= assignment
+                       |
+                       write
+                       |
+                       error
+                       {: System.out.println ( "syntax error" ); :}
+                       ;
+
+     write         ::= WRITE LPAREN expression:e RPAREN
+                       {: actWrite ( e ); :}
+                       |
+                       WRITE LPAREN assignment:a  RPAREN
+                       {: actWrite ( a ); :}
+                       ;
+
+     assignment    ::= VARIABLE:v0 ASSIGN expression:e0
+                       {: RESULT = actAssignment ( v0, e0 ); :};
+
+     expression    ::= expression:e0 PLUS   expression:e1
+                       {: RESULT = actExpressPlus     ( e0, e1 ); :}
+                       |
+                       expression:e0 MINUS  expression:e1
+                       {: RESULT = actExpressMinus    ( e0, e1 ); :}
+                       |
+                       expression:e0 TIMES  expression:e1
+                       {: RESULT = actExpressTimes    ( e0, e1 ); :}
+                       |
+                       expression:e0 DIVIDE expression:e1
+                       {: RESULT = actExpressDivide   ( e0, e1 ); :}
+                       |
+                       expression:e0 EXP    expression:e1
+                       {: RESULT = actExpressExponent ( e0, e1 ); :}
+                       |
+                       expression:e0 MOD    expression:e1
+                       {: RESULT = actExpressModulus  ( e0, e1 ); :}
+                       |
+                       MINUS expression:e0
+                       {: RESULT = actExpressNegate   ( e0     ); :}
+                       %prec UMINUS
+                       |
+                       VARIABLE:v0
+                       {: RESULT = actExpressVariable ( v0     ); :}
+                       |
+                       INTEGER:i0
+                       {: RESULT = i0; :}
+                       |
+                       LPAREN expression:e0 RPAREN
+                       {: RESULT = e0; :}
+                       |
+                       LPAREN assignment:a0 RPAREN
+                       {: RESULT = a0; :}
+                       ;

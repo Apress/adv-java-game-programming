@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE ejb-jar PUBLIC "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN"
+  "http://java.sun.com/dtd/ejb-jar_2_0.dtd">
+
+<ejb-jar>
+
+  <enterprise-beans>
+
+    <entity>
+       <ejb-name>UserEJB</ejb-name>
+       <local-home>com.croftsoft.apps.wyrm.entity.UserLocalHome</local-home>
+       <local>com.croftsoft.apps.wyrm.entity.UserLocal</local>
+       <ejb-class>com.croftsoft.apps.wyrm.entity.UserBean</ejb-class>
+       <persistence-type>Container</persistence-type>
+       <prim-key-class>java.lang.Long</prim-key-class>
+       <reentrant>False</reentrant>
+       <cmp-version>2.x</cmp-version>
+       <abstract-schema-name>User</abstract-schema-name>
+       <cmp-field><field-name>id</field-name></cmp-field>
+       <cmp-field><field-name>username</field-name></cmp-field>
+       <cmp-field><field-name>password</field-name></cmp-field>
+       <cmp-field><field-name>firstName</field-name></cmp-field>
+       <cmp-field><field-name>middleName</field-name></cmp-field>
+       <cmp-field><field-name>lastName</field-name></cmp-field>
+       <cmp-field><field-name>credits</field-name></cmp-field>
+       <primkey-field>id</primkey-field>
+       <security-identity><use-caller-identity/></security-identity>
+       <query>
+         <query-method>
+           <method-name>ejbSelectUsernames</method-name>
+           <method-params/>
+         </query-method>
+         <ejb-ql>
+           SELECT c.username FROM User AS c
+         </ejb-ql>
+       </query>
+    </entity>
+
+    <entity>
+      <ejb-name>PcEJB</ejb-name>
+      <local-home>com.croftsoft.apps.wyrm.entity.PcLocalHome</local-home>
+      <local>com.croftsoft.apps.wyrm.entity.PcLocal</local>
+      <ejb-class>com.croftsoft.apps.wyrm.entity.PcBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>java.lang.Long</prim-key-class>
+      <reentrant>False</reentrant>
+      <cmp-version>2.x</cmp-version>
+      <abstract-schema-name>Pc</abstract-schema-name>
+      <cmp-field><field-name>id</field-name></cmp-field>
+      <cmp-field><field-name>name</field-name></cmp-field>
+      <cmp-field><field-name>state</field-name></cmp-field>
+      <cmp-field><field-name>health</field-name></cmp-field>
+      <cmp-field><field-name>wealth</field-name></cmp-field>
+      <cmp-field><field-name>level</field-name></cmp-field>
+      <cmp-field><field-name>experience</field-name></cmp-field>
+      <primkey-field>id</primkey-field>
+      <security-identity><use-caller-identity/></security-identity>
+    </entity>
+
+    <session>
+      <ejb-name>WyrmServerEJB</ejb-name>
+      <local-home>com.croftsoft.apps.wyrm.server.WyrmServerLocalHome</local-home>
+      <local>com.croftsoft.apps.wyrm.server.WyrmServerLocal</local>
+      <ejb-class>com.croftsoft.apps.wyrm.server.WyrmServerBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+      <ejb-local-ref>
+        <ejb-ref-name>ejb/UserLocalHome</ejb-ref-name>  
+        <ejb-ref-type>Entity</ejb-ref-type>
+        <local-home>com.croftsoft.apps.wyrm.entity.UserLocalHome</local-home>
+        <local>com.croftsoft.apps.wyrm.entity.UserLocal</local>
+        <!-- ejb-link is required by jboss for local-refs. -->
+        <ejb-link>UserEJB</ejb-link>
+      </ejb-local-ref>
+      <ejb-local-ref>
+        <ejb-ref-name>ejb/PcLocalHome</ejb-ref-name>  
+        <ejb-ref-type>Entity</ejb-ref-type>
+        <local-home>com.croftsoft.apps.wyrm.entity.PcLocalHome</local-home>
+        <local>com.croftsoft.apps.wyrm.entity.PcLocal</local>
+        <!-- ejb-link is required by jboss for local-refs. -->
+        <ejb-link>PcEJB</ejb-link>
+      </ejb-local-ref>
+      <security-identity><use-caller-identity/></security-identity>
+      <env-entry>
+        <env-entry-name>initial_health</env-entry-name>
+        <env-entry-type>java.lang.Long</env-entry-type>
+        <env-entry-value>10</env-entry-value>
+      </env-entry>
+    </session>
+
+  </enterprise-beans>
+
+  <relationships>
+    <ejb-relation>
+      <ejb-relation-name>User-Pc</ejb-relation-name>
+      <ejb-relationship-role>
+        <ejb-relationship-role-name>User-has-a-Pc</ejb-relationship-role-name>
+        <multiplicity>One</multiplicity>
+        <relationship-role-source>
+          <ejb-name>UserEJB</ejb-name>
+        </relationship-role-source>
+        <cmr-field>
+          <cmr-field-name>pcLocal</cmr-field-name>
+        </cmr-field>
+      </ejb-relationship-role>
+      <ejb-relationship-role>
+        <ejb-relationship-role-name>Pc-belongs-to-User</ejb-relationship-role-name>
+        <multiplicity>One</multiplicity>
+        <cascade-delete/>
+        <relationship-role-source>
+          <ejb-name>PcEJB</ejb-name>
+        </relationship-role-source>
+      </ejb-relationship-role>
+    </ejb-relation>
+  </relationships>
+
+  <assembly-descriptor>
+
+    <security-role>
+      <description>
+         This role represents everyone who is allowed full access.
+      </description>
+      <role-name>everyone</role-name>
+    </security-role>
+
+    <method-permission>
+      <role-name>everyone</role-name>
+      <method>
+        <ejb-name>UserEJB</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <method>
+        <ejb-name>PcEJB</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <method>
+        <ejb-name>WyrmServerEJB</ejb-name>
+        <method-name>*</method-name>
+      </method>
+    </method-permission>
+
+    <container-transaction>
+      <method>
+        <ejb-name>UserEJB</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <method>
+        <ejb-name>PcEJB</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <method>
+        <ejb-name>WyrmServerEJB</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+
+  </assembly-descriptor>
+
+</ejb-jar>

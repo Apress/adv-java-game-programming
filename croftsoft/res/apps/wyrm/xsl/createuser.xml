@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+  "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:createuser="http://croftsoft.com/wyrm/xsl/createuser">
+  <head>
+    <title>
+      Create New User \ Wyrm
+    </title>
+    <base target="_top" />
+  </head>
+  <body>
+
+<p align="center">
+  <createuser:message>Create New User</createuser:message>
+</p>
+
+<form method="post" action="servlet">
+  <table bgcolor="lightgreen" align="center"><tr><td>
+  <table cellspacing="10" align="center" bgcolor="#CCFFCC">
+    <tr>
+      <td>
+        Username
+      </td>
+      <td>
+        <input type="text" name="username" size="10" createuser:value="" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Password
+      </td>
+      <td>
+        <input type="password" name="password" size="10" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Password (confirm)
+      </td>
+      <td>
+        <input type="password" name="password2" size="10" />
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
+        <input type="submit" value="Create"  />
+      </td>
+    </tr>
+  </table>
+  </td></tr></table>
+  <input type="hidden" name="request" value="createUser" />
+</form>
+
+<p align="center">
+<form method="post" action="servlet">
+  <input type="submit" value="Cancel" />
+  <input type="hidden" name="request" value="state" />
+</form>
+</p>
+
+  </body>
+</html>

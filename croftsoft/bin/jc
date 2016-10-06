@@ -1,0 +1,2 @@
+#
+javac -deprecation -d ~/java/lib -sourcepath ~/cvs/croftsoft/src -classpath ~/java/lib:/usr/local/j2sdkee1.3.1/lib/j2ee.jar $1 $2 $3 $4 $5 $6 $7 $8 $9

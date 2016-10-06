@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+  "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>
+      Town Square \ Wyrm
+    </title>
+  </head>
+  <body>
+
+<p align="center">
+  You are in the Town Square.
+</p>
+
+<center>
+<form method="post" action="servlet">
+<table align="center"><tr><td>
+  <input type="radio" name="request" value="dungeon" checked="true" />Dungeon<br />
+  <input type="radio" name="request" value="healer"  />Healer<br />
+</td></tr></table>
+  <input type="submit" value="Choose" />
+</form>
+</center>
+
+  </body>
+</html>

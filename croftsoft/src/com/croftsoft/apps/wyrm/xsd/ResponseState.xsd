@@ -1,0 +1,32 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+  jaxb:version="1.0"
+  targetNamespace="http://croftsoft.com/apps/wyrm/xjc"
+       xmlns:wyrm="http://croftsoft.com/apps/wyrm/xjc">
+
+  <element name="responseState" type="wyrm:ResponseStateType"/>
+
+  <complexType name="ResponseStateType">
+    <annotation>
+      <appinfo>
+        <jaxb:class>
+          <jaxb:javadoc>
+            Current state.
+          </jaxb:javadoc>
+        </jaxb:class>
+      </appinfo>
+    </annotation>
+    <sequence>
+      <element name="username"   type="string"/>
+      <element name="credits"    type="double"/>
+      <element name="message"    type="string"/>
+      <element name="state"      type="string"/>
+      <element name="pcName"     type="string"/>
+      <element name="health"     type="long"/>
+      <element name="wealth"     type="long"/>
+      <element name="level"      type="long"/>
+      <element name="experience" type="long"/>
+    </sequence>
+  </complexType>
+
+</schema>

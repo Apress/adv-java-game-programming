@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jnlp codebase="http://croftsoft.com/agoracast/jnlp">
+
+  <information>
+    <title>Agoracast</title>
+    <vendor>CroftSoft Inc</vendor>
+    <description kind="one-line">Decentralized E-commerce</description>
+    <description kind="short">Agoracast is a decentralized consumer-to-peer (C2P) e-commerce desktop application that permits users to exchange goods and information over the Internet without using a middleman.  Some of the applications include selling used textbooks, bidding on a computer, looking for an apartment, posting your job qualifications, and finding a mate.</description>
+    <description kind="tooltip">Agoracast</description>
+    <homepage href="http://croftsoft.com/agoracast/"/>
+    <icon kind="default"  href="agoracast_icon_default.gif"/>
+    <icon kind="selected" href="agoracast_icon_selected.gif"/>
+    <icon kind="disabled" href="agoracast_icon_disabled.gif"/>
+    <icon kind="rollover" href="agoracast_icon_rollover.gif"/>
+    <offline-allowed/>
+  </information>
+
+  <resources>
+    <j2se version="1.4+"/>
+    <jar href="agoracast.jar" main="true" download="eager"/>
+  </resources>
+
+  <application-desc main-class="com.croftsoft.agoracast.c2p.Agoracast"/>
+
+  <security>
+    <j2ee-application-client-permissions/>
+  </security>
+
+</jnlp>

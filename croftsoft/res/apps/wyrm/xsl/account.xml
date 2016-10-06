@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+  "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:account="http://croftsoft.com/wyrm/xsl/account">
+  <head>
+    <title>
+      Account \ Wyrm
+    </title>
+    <base target="_top" />
+  </head>
+  <body>
+
+<table align="center" cellpadding="0" cellspacing="16" border="1">
+  <tr>
+    <td align="left">
+      Username
+    </td>
+    <td align="right">
+      <account:username>USERNAME</account:username>
+    </td>
+  </tr>
+  <tr>
+    <td align="left">
+      First Name
+    </td>
+    <td align="right">
+      <account:firstName>FIRST NAME</account:firstName>
+    </td>
+  </tr>
+  <tr>
+    <td align="left">
+      Middle Name
+    </td>
+    <td align="right">
+      <account:middleName>MIDDLE NAME</account:middleName>
+    </td>
+  </tr>
+  <tr>
+    <td align="left">
+      Last Name
+    </td>
+    <td align="right">
+      <account:lastName>LAST NAME</account:lastName>
+    </td>
+  </tr>
+  <tr>
+    <td align="left">
+      Credits
+    </td>
+    <td align="right">
+      <account:credits>CREDITS</account:credits>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+<form method="post" action="servlet">
+  <input type="submit" value="Delete User Account" />
+  <input type="hidden" name="request" value="destroyUser" />
+</form>
+</p>
+
+<p align="center">
+<form method="post" action="servlet">
+  <input type="submit" value="Continue" />
+  <input type="hidden" name="request" value="state" />
+</form>
+</p>
+
+  </body>
+</html>

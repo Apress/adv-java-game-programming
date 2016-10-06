@@ -1,0 +1,26 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+  jaxb:version="1.0"
+  targetNamespace="http://croftsoft.com/apps/wyrm/xjc"
+       xmlns:wyrm="http://croftsoft.com/apps/wyrm/xjc">
+
+  <element name="request" type="wyrm:RequestType"/>
+
+  <complexType name="RequestType">
+    <annotation>
+      <appinfo>
+        <jaxb:class>
+          <jaxb:javadoc>
+            A generic request type.
+          </jaxb:javadoc>
+        </jaxb:class>
+      </appinfo>
+    </annotation>
+    <sequence>
+      <element name="username" type="string"/>
+      <element name="password" type="string"/>
+      <element name="type"     type="string"/>
+    </sequence>
+  </complexType>
+
+</schema>

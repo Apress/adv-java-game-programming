@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC
+  "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:template="http://croftsoft.com/wyrm/xsl/template">
+
+  <head>
+    <title><template:title>Wyrm</template:title></title>
+    <base target="_top" />
+  </head>
+
+  <body bgcolor="lightgreen">
+    <table cellpadding="1" cellspacing="0" align="center" valign="middle"
+      bgcolor="#CCFFCC">
+      <tr>
+        <td height="100%" bgcolor="#CCFFCC">
+          <table cellpadding="1" cellspacing="10" align="center" valign="middle" bgcolor="#CCFFCC">
+            <tr height="100%">
+              <td valign="top" bgcolor="#CCFFCC">
+                <table cellspacing="4" cellpadding="1" align="center" width="100%">
+                  <tr>
+                    <td align="center" colspan="2">
+                      <template:pcName>Brave Sir Robert</template:pcName>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="left">Health</td>
+                    <td align="right">
+                      <template:health>999</template:health>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="left">Wealth</td>
+                    <td align="right">
+                      <template:wealth>999</template:wealth>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="left">Level</td>
+                    <td align="right">
+                      <template:level>1</template:level>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="left">Experience</td>
+                    <td align="right">
+                      <template:experience>10000</template:experience>
+                    </td>
+                  </tr>
+                </table>
+<!--computer & video games browse box-->
+<center>
+  <form method="get" action="http://www.amazon.com/exec/obidos/redirect" target="_blank">
+    <input type="hidden" name="tag" value="croftsoft-20" />
+    <table cellpadding="1" cellspacing="0" width="148">
+      <tr>
+        <td colspan="2" height="20" valign="bottom"
+          align="center" bgcolor="#000000">
+          <a href="http://www.amazon.com/exec/obidos/redirect-home/croftsoft-20"
+            target="_blank">
+            <img src="media/toys-browse-logo-126x32.gif"
+              border="0" width="126" height="32" align="center"
+              valign="middle" /></a>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" height="50" valign="bottom" align="center"
+          bgcolor="#08215A">
+          <input
+            type="image"
+            name="path"
+            value="tg/stores/browse/-/468642/"
+            src="media/vidgame_browsemenu_148x50.gif"
+            border="0"
+            width="148"
+            height="50"
+            align="center" />
+        </td>
+      </tr>
+      <tr>
+        <td bgcolor="#08215A" align="left">
+          <font size="2">
+            <select name="path">
+              <option value="tg/stores/browse/-/229575"
+                selected="true">
+                PC Games
+              </option>
+              <option value="tg/stores/browse/-/229773">
+                PlayStation
+              </option>
+              <option value="tg/stores/browse/-/301712">
+                PlayStation2
+              </option>
+              <option value="tg/stores/browse/-/229793">
+                Sega Dreamcast
+              </option>
+              <option value="tg/stores/browse/-/229763">
+                Nintendo 64
+              </option>
+              <option value="tg/stores/browse/-/229783">
+                Game Boy
+              </option>
+              <option value="tg/stores/browse/-/229647">
+                Mac Games
+              </option>
+              <option value="tg/stores/browse/-/294940">
+                More systems
+              </option>
+            </select>
+          </font>
+        </td>
+        <td bgcolor="#08215A" align="right">
+          <font size="-1">
+            <input type="submit" value="Go!" border="0" />
+          </font>
+        </td>
+      </tr>
+    </table>
+  </form>
+</center>
+<!--end computer & video games browse box-->
+                <p align="center">
+                  <a href="servlet?request=account">
+                    <template:username>USERNAME</template:username></a>
+                  <br />
+                  <nobr><template:credits>CREDITS</template:credits> Credits</nobr>
+                </p>
+                <center>
+                  <form method="post" action="servlet">
+                    <input type="submit" value="Logout" />
+                    <input type="hidden" name="request" value="logout" />
+                  </form>
+                </center>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td valign="top" height="100%" bgcolor="#CCFFCC">
+          <table cellpadding="1" cellspacing="0" height="100%">
+            <tr>
+              <td height="60" bgcolor="#CCFFCC">
+                <a href="http://www.amazon.com/exec/obidos/redirect-home/croftsoft-20"
+                  target="_blank"><img
+                  src="media/home-banner-468x60.gif"
+                  border="0" height="60" width="468"
+                  alt="In Association with Amazon.com" /></a>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top" align="center" height="100%">
+                <table cellpadding="1" cellspacing="0" height="100%">
+                  <tr>
+                    <td valign="top" height="100%" width="100%" align="center">
+                      <table cellspacing="0" cellpadding="1" width="100%" height="100%">
+                        <tr>
+                          <td bgcolor="#CCFFCC" align="center" valign="top">
+                            <center>
+                              <template:message>___ --- === *** === --- ___</template:message>
+                            </center>
+                            <template:content>CONTENT</template:content>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td valign="top" height="100%" align="center">
+                      <table cellspacing="0" cellpadding="1" height="100%">
+                        <tr>
+                          <td align="center" bgcolor="#CCFFCC" height="100%">
+                            <a target="_blank" href="http://www.croftsoft.com/people/david/"
+                              alt="David Wallace Croft">
+                              <img src="media/croft.jpg"
+                                border="0" width="160" height="259" /></a>
+                            <center>
+                            <a href="about/">About</a> /
+                            <a href="help/">Help</a>
+                            </center>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,28 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+  jaxb:version="1.0"
+  targetNamespace="http://croftsoft.com/apps/wyrm/xjc"
+       xmlns:wyrm="http://croftsoft.com/apps/wyrm/xjc">
+
+  <element name="responseAccount" type="wyrm:ResponseAccountType"/>
+
+  <complexType name="ResponseAccountType">
+    <annotation>
+      <appinfo>
+        <jaxb:class>
+          <jaxb:javadoc>
+            Provides user account data.
+          </jaxb:javadoc>
+        </jaxb:class>
+      </appinfo>
+    </annotation>
+    <sequence>
+      <element name="username"   type="string"/>
+      <element name="firstName"  type="string"/>
+      <element name="middleName" type="string"/>
+      <element name="lastName"   type="string"/>
+      <element name="credits"    type="double"/>
+    </sequence>
+  </complexType>
+
+</schema>
